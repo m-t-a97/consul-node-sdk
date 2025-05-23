@@ -80,7 +80,7 @@ export interface Service {
   /** Service ID. Defaults to Service if not provided */
   ID?: string;
   /** Service name */
-  Service: string;
+  Name: string;
   /** Tags for the service */
   Tags?: string[];
   /** Service-specific address. Defaults to node address if not provided */
