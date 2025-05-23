@@ -262,11 +262,14 @@ export class ConsulAgent {
     service: Service,
     options?: ConsulBaseOptions
   ): Promise<boolean> {
-    const url = `/agent/service/register`;
-    return this._client
-      .put(url, service, { params: options })
-      .then(() => true)
-      .catch(() => false);
+    try {
+      const url = `/agent/service/register`;
+      await this._client.put(url, service, { params: options });
+      return true;
+    } catch (error: unknown) {
+      console.error(error);
+      return false;
+    }
   }
 
   /**
@@ -279,11 +282,14 @@ export class ConsulAgent {
     serviceId: string,
     options?: ConsulBaseOptions
   ): Promise<boolean> {
-    const url = `/agent/service/deregister/${serviceId}`;
-    return this._client
-      .put(url, null, { params: options })
-      .then(() => true)
-      .catch(() => false);
+    try {
+      const url = `/agent/service/deregister/${serviceId}`;
+      await this._client.put(url, null, { params: options });
+      return true;
+    } catch (error: unknown) {
+      console.error(error);
+      return false;
+    }
   }
 
   /**
@@ -308,11 +314,14 @@ export class ConsulAgent {
     check: Check,
     options?: ConsulBaseOptions
   ): Promise<boolean> {
-    const url = `/agent/check/register`;
-    return this._client
-      .put(url, check, { params: options })
-      .then(() => true)
-      .catch(() => false);
+    try {
+      const url = `/agent/check/register`;
+      await this._client.put(url, check, { params: options });
+      return true;
+    } catch (error: unknown) {
+      console.error(error);
+      return false;
+    }
   }
 
   /**
@@ -325,11 +334,14 @@ export class ConsulAgent {
     checkId: string,
     options?: ConsulBaseOptions
   ): Promise<boolean> {
-    const url = `/agent/check/deregister/${checkId}`;
-    return this._client
-      .put(url, null, { params: options })
-      .then(() => true)
-      .catch(() => false);
+    try {
+      const url = `/agent/check/deregister/${checkId}`;
+      await this._client.put(url, null, { params: options });
+      return true;
+    } catch (error: unknown) {
+      console.error(error);
+      return false;
+    }
   }
 
   /**
@@ -352,11 +364,14 @@ export class ConsulAgent {
     address: string,
     options?: ConsulBaseOptions & { wan?: boolean }
   ): Promise<boolean> {
-    const url = `/agent/join/${address}`;
-    return this._client
-      .put(url, null, { params: options })
-      .then(() => true)
-      .catch(() => false);
+    try {
+      const url = `/agent/join/${address}`;
+      await this._client.put(url, null, { params: options });
+      return true;
+    } catch (error: unknown) {
+      console.error(error);
+      return false;
+    }
   }
 
   /**
@@ -365,11 +380,14 @@ export class ConsulAgent {
    * @returns Whether the agent left
    */
   async leave(options?: ConsulBaseOptions): Promise<boolean> {
-    const url = `/agent/leave`;
-    return this._client
-      .put(url, null, { params: options })
-      .then(() => true)
-      .catch(() => false);
+    try {
+      const url = `/agent/leave`;
+      await this._client.put(url, null, { params: options });
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
   }
 
   /**
@@ -378,11 +396,14 @@ export class ConsulAgent {
    * @returns Whether the agent reloaded
    */
   async reload(options?: ConsulBaseOptions): Promise<boolean> {
-    const url = `/agent/reload`;
-    return this._client
-      .put(url, null, { params: options })
-      .then(() => true)
-      .catch(() => false);
+    try {
+      const url = `/agent/reload`;
+      await this._client.put(url, null, { params: options });
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
   }
 
   /**
@@ -409,11 +430,18 @@ export class ConsulAgent {
     state: "passing" | "warning" | "critical",
     options?: ConsulBaseOptions & { note?: string }
   ): Promise<boolean> {
-    const url = `/agent/check/update/${checkId}`;
-    return this._client
-      .put(url, { Status: state, Output: options?.note }, { params: options })
-      .then(() => true)
-      .catch(() => false);
+    try {
+      const url = `/agent/check/update/${checkId}`;
+      await this._client.put(
+        url,
+        { Status: state, Output: options?.note },
+        { params: options }
+      );
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
   }
 
   /**
@@ -454,11 +482,14 @@ export class CatalogClient {
     registration: CatalogRegistration,
     options?: ConsulBaseOptions
   ): Promise<boolean> {
-    const url = `/catalog/register`;
-    return this._client
-      .put(url, registration, { params: options })
-      .then(() => true)
-      .catch(() => false);
+    try {
+      const url = `/catalog/register`;
+      await this._client.put(url, registration, { params: options });
+      return true;
+    } catch (error: unknown) {
+      console.error(error);
+      return false;
+    }
   }
 
   /**
@@ -471,11 +502,14 @@ export class CatalogClient {
     deregistration: CatalogDeregistration,
     options?: ConsulBaseOptions
   ): Promise<boolean> {
-    const url = `/catalog/deregister`;
-    return this._client
-      .put(url, deregistration, { params: options })
-      .then(() => true)
-      .catch(() => false);
+    try {
+      const url = `/catalog/deregister`;
+      await this._client.put(url, deregistration, { params: options });
+      return true;
+    } catch (error: unknown) {
+      console.error(error);
+      return false;
+    }
   }
 
   /**
@@ -823,7 +857,7 @@ export class KVClient {
       return Array.isArray(response)
         ? (response[0] as KVPair)
         : (response as KVPair);
-    } catch (e) {
+    } catch (error: unknown) {
       return null;
     }
   }
@@ -851,7 +885,7 @@ export class KVClient {
       }
 
       return response as string[];
-    } catch (e) {
+    } catch (error: unknown) {
       return [];
     }
   }
@@ -879,7 +913,7 @@ export class KVClient {
       }
 
       return response as KVPair[];
-    } catch (e) {
+    } catch (error: unknown) {
       return [];
     }
   }
@@ -901,11 +935,12 @@ export class KVClient {
       release?: string;
     }
   ): Promise<boolean> {
-    const url = `/kv/${key}`;
     try {
-      const response = await this._client.put(url, value, { params: options });
-      return !!response;
-    } catch (e) {
+      const url = `/kv/${key}`;
+      await this._client.put(url, value, { params: options });
+      return true;
+    } catch (error: unknown) {
+      console.error(error);
       return false;
     }
   }
@@ -920,11 +955,12 @@ export class KVClient {
     key: string,
     options?: ConsulBaseOptions & { recurse?: boolean }
   ): Promise<boolean> {
-    const url = `/kv/${key}`;
     try {
+      const url = `/kv/${key}`;
       await this._client.delete(url, { params: options });
       return true;
-    } catch (e) {
+    } catch (error: unknown) {
+      console.error(error);
       return false;
     }
   }
@@ -972,11 +1008,12 @@ export class SessionClient {
     sessionId: string,
     options?: ConsulBaseOptions
   ): Promise<boolean> {
-    const url = `/session/destroy/${sessionId}`;
     try {
+      const url = `/session/destroy/${sessionId}`;
       await this._client.put(url, null, { params: options });
       return true;
-    } catch (e) {
+    } catch (error: unknown) {
+      console.error(error);
       return false;
     }
   }
@@ -1004,7 +1041,8 @@ export class SessionClient {
       }
 
       return Array.isArray(response) ? response[0] : response;
-    } catch (e) {
+    } catch (error) {
+      console.error(error);
       return null;
     }
   }
@@ -1045,9 +1083,8 @@ export class SessionClient {
     sessionId: string,
     options?: ConsulBaseOptions
   ): Promise<SessionEntry | null> {
-    const url = `/session/renew/${sessionId}`;
-
     try {
+      const url = `/session/renew/${sessionId}`;
       const response = await this._client.put(url, null, {
         params: options,
       });
@@ -1057,7 +1094,8 @@ export class SessionClient {
       }
 
       return Array.isArray(response) ? response[0] : response;
-    } catch (e) {
+    } catch (error: unknown) {
+      console.error(error);
       return null;
     }
   }
@@ -1201,10 +1239,9 @@ export class CoordinateClient {
    * @returns Coordinates
    */
   async node(node: string, options?: BlockingQueryOptions): Promise<any> {
-    const url = `/coordinate/node/${node}`;
-    const params = { ...options };
-
     try {
+      const url = `/coordinate/node/${node}`;
+      const params = { ...options };
       const response = await this._client.get(url, {
         params,
       });
@@ -1214,7 +1251,8 @@ export class CoordinateClient {
       }
 
       return Array.isArray(response) ? response[0] : response;
-    } catch (e) {
+    } catch (error: unknown) {
+      console.error(error);
       return null;
     }
   }
@@ -1270,11 +1308,12 @@ export class QueryClient {
     query: any,
     options?: ConsulBaseOptions
   ): Promise<boolean> {
-    const url = `/query/${queryId}`;
     try {
+      const url = `/query/${queryId}`;
       await this._client.put(url, query, { params: options });
       return true;
-    } catch (e) {
+    } catch (error: unknown) {
+      console.error(error);
       return false;
     }
   }
@@ -1296,9 +1335,8 @@ export class QueryClient {
    * @returns Query definition
    */
   async get(queryId: string, options?: ConsulBaseOptions): Promise<any> {
-    const url = `/query/${queryId}`;
-
     try {
+      const url = `/query/${queryId}`;
       const response = await this._client.get(url, {
         params: options,
       });
@@ -1308,7 +1346,8 @@ export class QueryClient {
       }
 
       return Array.isArray(response) ? response[0] : response;
-    } catch (e) {
+    } catch (error: unknown) {
+      console.error(error);
       return null;
     }
   }
@@ -1320,11 +1359,12 @@ export class QueryClient {
    * @returns Whether the query was deleted
    */
   async delete(queryId: string, options?: ConsulBaseOptions): Promise<boolean> {
-    const url = `/query/${queryId}`;
     try {
+      const url = `/query/${queryId}`;
       await this._client.delete(url, { params: options });
       return true;
-    } catch (e) {
+    } catch (error: unknown) {
+      console.error(error);
       return false;
     }
   }
@@ -1416,14 +1456,15 @@ export class SnapshotClient {
     snapshot: ArrayBuffer | Buffer,
     options?: ConsulBaseOptions
   ): Promise<boolean> {
-    const url = `/snapshot`;
     try {
+      const url = `/snapshot`;
       await this._client.put(url, snapshot, {
         params: options,
         headers: { "Content-Type": "application/octet-stream" },
       });
       return true;
-    } catch (e) {
+    } catch (error: unknown) {
+      console.error(error);
       return false;
     }
   }

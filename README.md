@@ -13,7 +13,7 @@ This is a Consul SDK for Node.js. The SDK provides a client for interacting with
 ## Usage
 
 ```typescript
-import { ConsulClient } from "./src/consul-client";
+import { ConsulClient } from "./src/client.ts";
 
 // Create a new client
 const consul = new ConsulClient({
@@ -48,13 +48,15 @@ async function main() {
 }
 
 // Using a custom fetch implementation
-const customConsul = new ConsulClient({
+const customFetchConsul = new ConsulClient({
   host: "localhost",
   port: 8500,
-  fetchFn: async (url, options) => {
-    console.log("Fetching URL:", url);
-    // Add custom logic here (logging, retries, etc.)
-    return fetch(url, options);
+  fetchFn: async (
+    input: string | URL | Request,
+    init?: RequestInit
+  ): Promise<Response> => {
+    console.log("Custom fetch called with URL:", input);
+    return fetch(input, init) as any;
   },
 });
 ```
@@ -87,12 +89,4 @@ The `ConsulClient` constructor accepts the following options:
 - `txn`: Consul transaction API
 - `snapshot`: Consul snapshot API
 
-## Changelog
-
-### Current Version
-
-- Removed Axios dependency completely
-- Replaced with native fetch API
-- Added support for custom fetch implementations
-- Maintained all existing client functionality
-- Consistent async/await patterns throughout
+---
