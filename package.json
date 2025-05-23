@@ -1,0 +1,26 @@
+{
+  "name": "consul-node-sdk",
+  "version": "0.1.0",
+  "description": "Node.js SDK for Consul",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/m-t-a97/consul-node-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/m-t-a97/consul-node-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-t-a97/consul-node-sdk.git"
+  },
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "build": "rm -rf ./dist && tsdown",
+    "dev": "tsx ./scripts/test-client.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "tsdown": "^0.12.2",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}
