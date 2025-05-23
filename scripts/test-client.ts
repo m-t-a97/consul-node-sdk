@@ -7,8 +7,11 @@ async function main() {
       port: 8500,
     });
 
-    const result = await consul.status.leader();
-    console.log(result);
+    const leader = await consul.status.leader();
+    console.log("Leader:", leader);
+
+    const services = await consul.agent.services();
+    console.log("Services:", services);
   } catch (error: any) {
     console.error("Error with custom fetch:", error.message);
   }
