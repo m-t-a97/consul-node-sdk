@@ -1,4 +1,4 @@
-import { defineConfig, UserConfig, UserConfigFn } from "tsdown";
+import { type UserConfig, type UserConfigFn, defineConfig } from "tsdown";
 
 const config: UserConfig | UserConfigFn = defineConfig({
   entry: ["./src/index.ts"],
@@ -8,13 +8,13 @@ const config: UserConfig | UserConfigFn = defineConfig({
   unused: {
     level: "error",
     ignore: [
-      "typescript", // Yarn PnP
-    ],
+      "typescript" // Yarn PnP
+    ]
   },
   exports: true,
   onSuccess() {
     console.info("🎉 Build succeeded!");
-  },
+  }
 });
 
 export default config;

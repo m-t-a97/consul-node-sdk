@@ -1,21 +1,21 @@
-import {
-  ConsulBaseOptions,
+import type {
   BlockingQueryOptions,
-  CatalogRegistration,
   CatalogDeregistration,
-  Node,
-  Service,
+  CatalogRegistration,
   Check,
-  KVPair,
-  SessionEntry,
-  ServiceListOptions,
-  HealthCheckOptions,
-  HealthServiceOptions,
+  ConsulBaseOptions,
   Event,
-  TxnOp,
-  TxnResponse,
   FetchFn,
   FetchRequestOptions,
+  HealthCheckOptions,
+  HealthServiceOptions,
+  KVPair,
+  Node,
+  Service,
+  ServiceListOptions,
+  SessionEntry,
+  TxnOp,
+  TxnResponse
 } from "./types";
 
 /**
@@ -54,16 +54,18 @@ class HttpClient {
     );
 
     if (params) {
-      Object.entries(params).forEach(([key, value]) => {
+      for (const [key, value] of Object.entries(params)) {
         if (value !== undefined) {
           // Handle array values
           if (Array.isArray(value)) {
-            value.forEach((v) => url.searchParams.append(key, v.toString()));
+            for (const v of value) {
+              url.searchParams.append(key, v.toString());
+            }
           } else {
             url.searchParams.append(key, value.toString());
           }
         }
-      });
+      }
     }
 
     return url.toString();
@@ -93,7 +95,7 @@ class HttpClient {
 
     const requestHeaders = {
       ...this._defaultHeaders,
-      ...headers,
+      ...headers
     };
 
     // Set default content type if sending a body
@@ -113,7 +115,7 @@ class HttpClient {
     const requestInit: RequestInit = {
       method,
       headers: requestHeaders,
-      ...rest,
+      ...rest
     };
 
     // Handle body based on content type
@@ -236,7 +238,7 @@ export class ConsulAgent {
    * @returns Agent information
    */
   async self(options?: ConsulBaseOptions): Promise<any> {
-    const url = `/agent/self`;
+    const url = "/agent/self";
     return this._client.get(url, { params: options });
   }
 
@@ -248,7 +250,7 @@ export class ConsulAgent {
   async members(
     options?: ConsulBaseOptions & { wan?: boolean }
   ): Promise<any[]> {
-    const url = `/agent/members`;
+    const url = "/agent/members";
     return this._client.get(url, { params: options });
   }
 
@@ -263,7 +265,7 @@ export class ConsulAgent {
     options?: ConsulBaseOptions
   ): Promise<boolean> {
     try {
-      const url = `/agent/service/register`;
+      const url = "/agent/service/register";
       await this._client.put(url, service, { params: options });
       return true;
     } catch (error: unknown) {
@@ -300,7 +302,7 @@ export class ConsulAgent {
   async services(
     options?: ConsulBaseOptions
   ): Promise<Record<string, Service>> {
-    const url = `/agent/services`;
+    const url = "/agent/services";
     return this._client.get(url, { params: options });
   }
 
@@ -315,7 +317,7 @@ export class ConsulAgent {
     options?: ConsulBaseOptions
   ): Promise<boolean> {
     try {
-      const url = `/agent/check/register`;
+      const url = "/agent/check/register";
       await this._client.put(url, check, { params: options });
       return true;
     } catch (error: unknown) {
@@ -350,7 +352,7 @@ export class ConsulAgent {
    * @returns Dictionary of check IDs to checks
    */
   async checks(options?: ConsulBaseOptions): Promise<Record<string, Check>> {
-    const url = `/agent/checks`;
+    const url = "/agent/checks";
     return this._client.get(url, { params: options });
   }
 
@@ -381,7 +383,7 @@ export class ConsulAgent {
    */
   async leave(options?: ConsulBaseOptions): Promise<boolean> {
     try {
-      const url = `/agent/leave`;
+      const url = "/agent/leave";
       await this._client.put(url, null, { params: options });
       return true;
     } catch (error) {
@@ -397,7 +399,7 @@ export class ConsulAgent {
    */
   async reload(options?: ConsulBaseOptions): Promise<boolean> {
     try {
-      const url = `/agent/reload`;
+      const url = "/agent/reload";
       await this._client.put(url, null, { params: options });
       return true;
     } catch (error) {
@@ -414,7 +416,7 @@ export class ConsulAgent {
   async metrics(
     options?: ConsulBaseOptions & { format?: string }
   ): Promise<any> {
-    const url = `/agent/metrics`;
+    const url = "/agent/metrics";
     return this._client.get(url, { params: options });
   }
 
@@ -450,7 +452,7 @@ export class ConsulAgent {
    * @returns Agent configuration and member information
    */
   async connect(options?: ConsulBaseOptions): Promise<any> {
-    const url = `/agent/connect`;
+    const url = "/agent/connect";
     return this._client.get(url, { params: options });
   }
 }
@@ -483,7 +485,7 @@ export class CatalogClient {
     options?: ConsulBaseOptions
   ): Promise<boolean> {
     try {
-      const url = `/catalog/register`;
+      const url = "/catalog/register";
       await this._client.put(url, registration, { params: options });
       return true;
     } catch (error: unknown) {
@@ -503,7 +505,7 @@ export class CatalogClient {
     options?: ConsulBaseOptions
   ): Promise<boolean> {
     try {
-      const url = `/catalog/deregister`;
+      const url = "/catalog/deregister";
       await this._client.put(url, deregistration, { params: options });
       return true;
     } catch (error: unknown) {
@@ -518,7 +520,7 @@ export class CatalogClient {
    * @returns List of datacenters
    */
   async datacenters(options?: ConsulBaseOptions): Promise<string[]> {
-    const url = `/catalog/datacenters`;
+    const url = "/catalog/datacenters";
     return this._client.get(url, { params: options });
   }
 
@@ -533,7 +535,7 @@ export class CatalogClient {
       filter?: string;
     }
   ): Promise<Node[]> {
-    const url = `/catalog/nodes`;
+    const url = "/catalog/nodes";
     const params = this._prepareBlockingParams(options);
     return this._client.get(url, { params });
   }
@@ -546,7 +548,7 @@ export class CatalogClient {
   async services(
     options?: ServiceListOptions
   ): Promise<Record<string, string[]>> {
-    const url = `/catalog/services`;
+    const url = "/catalog/services";
     const params = this._prepareBlockingParams(options);
     return this._client.get(url, { params });
   }
@@ -645,14 +647,14 @@ export class CatalogClient {
       } else if (options.consistency === "stale") {
         params.stale = true;
       }
-      delete params.consistency;
+      params.consistency = undefined;
     }
 
     if (options.nodeMeta && typeof options.nodeMeta === "object") {
-      Object.entries(options.nodeMeta).forEach(([key, value]) => {
+      for (const [key, value] of Object.entries(options.nodeMeta)) {
         params[`node-meta=${key}`] = value;
-      });
-      delete params.nodeMeta;
+      }
+      params.nodeMeta = undefined;
     }
 
     return params;
@@ -788,14 +790,14 @@ export class HealthClient {
       } else if (options.consistency === "stale") {
         params.stale = true;
       }
-      delete params.consistency;
+      params.consistency = undefined;
     }
 
     if (options.nodeMeta && typeof options.nodeMeta === "object") {
-      Object.entries(options.nodeMeta).forEach(([key, value]) => {
+      for (const [key, value] of Object.entries(options.nodeMeta)) {
         params[`node-meta=${key}`] = value;
-      });
-      delete params.nodeMeta;
+      }
+      params.nodeMeta = undefined;
     }
 
     if (options.passing) {
@@ -804,7 +806,7 @@ export class HealthClient {
 
     if (options.mergeCentralConfig) {
       params["merge-central-config"] = true;
-      delete params.mergeCentralConfig;
+      params.mergeCentralConfig = undefined;
     }
 
     return params;
@@ -843,7 +845,7 @@ export class KVClient {
 
     try {
       const response = await this._client.get(url, {
-        params,
+        params
       });
 
       if (!response || (Array.isArray(response) && response.length === 0)) {
@@ -877,7 +879,7 @@ export class KVClient {
 
     try {
       const response = await this._client.get(url, {
-        params,
+        params
       });
 
       if (!response) {
@@ -905,7 +907,7 @@ export class KVClient {
 
     try {
       const response = await this._client.get(url, {
-        params,
+        params
       });
 
       if (!response) {
@@ -993,7 +995,7 @@ export class SessionClient {
     session: Partial<SessionEntry>,
     options?: ConsulBaseOptions
   ): Promise<string> {
-    const url = `/session/create`;
+    const url = "/session/create";
     const response = await this._client.put(url, session, { params: options });
     return (response as SessionEntry).ID;
   }
@@ -1033,7 +1035,7 @@ export class SessionClient {
 
     try {
       const response = await this._client.get(url, {
-        params,
+        params
       });
 
       if (!response || (Array.isArray(response) && response.length === 0)) {
@@ -1068,7 +1070,7 @@ export class SessionClient {
    * @returns List of sessions
    */
   async list(options?: BlockingQueryOptions): Promise<SessionEntry[]> {
-    const url = `/session/list`;
+    const url = "/session/list";
     const params = { ...options };
     return this._client.get(url, { params });
   }
@@ -1086,7 +1088,7 @@ export class SessionClient {
     try {
       const url = `/session/renew/${sessionId}`;
       const response = await this._client.put(url, null, {
-        params: options,
+        params: options
       });
 
       if (!response || (Array.isArray(response) && response.length === 0)) {
@@ -1160,7 +1162,7 @@ export class EventClient {
   async list(
     options?: BlockingQueryOptions & { name?: string }
   ): Promise<Event[]> {
-    const url = `/event/list`;
+    const url = "/event/list";
     const params = { ...options };
     return this._client.get(url, { params });
   }
@@ -1189,7 +1191,7 @@ export class StatusClient {
    * @returns Leader address
    */
   async leader(options?: ConsulBaseOptions): Promise<string> {
-    const url = `/status/leader`;
+    const url = "/status/leader";
     return this._client.get(url, { params: options });
   }
 
@@ -1199,7 +1201,7 @@ export class StatusClient {
    * @returns List of peers
    */
   async peers(options?: ConsulBaseOptions): Promise<string[]> {
-    const url = `/status/peers`;
+    const url = "/status/peers";
     return this._client.get(url, { params: options });
   }
 }
@@ -1227,7 +1229,7 @@ export class CoordinateClient {
    * @returns List of coordinates
    */
   async nodes(options?: BlockingQueryOptions): Promise<any[]> {
-    const url = `/coordinate/nodes`;
+    const url = "/coordinate/nodes";
     const params = { ...options };
     return this._client.get(url, { params });
   }
@@ -1243,7 +1245,7 @@ export class CoordinateClient {
       const url = `/coordinate/node/${node}`;
       const params = { ...options };
       const response = await this._client.get(url, {
-        params,
+        params
       });
 
       if (!response || (Array.isArray(response) && response.length === 0)) {
@@ -1263,7 +1265,7 @@ export class CoordinateClient {
    * @returns List of coordinates
    */
   async datacenters(options?: ConsulBaseOptions): Promise<any[]> {
-    const url = `/coordinate/datacenters`;
+    const url = "/coordinate/datacenters";
     return this._client.get(url, { params: options });
   }
 }
@@ -1292,7 +1294,7 @@ export class QueryClient {
    * @returns Query ID
    */
   async create(query: any, options?: ConsulBaseOptions): Promise<string> {
-    const url = `/query`;
+    const url = "/query";
     return this._client.post(url, query, { params: options });
   }
 
@@ -1324,7 +1326,7 @@ export class QueryClient {
    * @returns List of queries
    */
   async list(options?: ConsulBaseOptions): Promise<any[]> {
-    const url = `/query`;
+    const url = "/query";
     return this._client.get(url, { params: options });
   }
 
@@ -1338,7 +1340,7 @@ export class QueryClient {
     try {
       const url = `/query/${queryId}`;
       const response = await this._client.get(url, {
-        params: options,
+        params: options
       });
 
       if (!response || (Array.isArray(response) && response.length === 0)) {
@@ -1411,7 +1413,7 @@ export class TxnClient {
     operations: TxnOp[],
     options?: ConsulBaseOptions
   ): Promise<TxnResponse> {
-    const url = `/txn`;
+    const url = "/txn";
     return this._client.put(url, operations, { params: options });
   }
 }
@@ -1439,10 +1441,10 @@ export class SnapshotClient {
    * @returns Snapshot data
    */
   async save(options?: ConsulBaseOptions): Promise<ArrayBuffer> {
-    const url = `/snapshot`;
+    const url = "/snapshot";
     return this._client.get(url, {
       params: options,
-      responseType: "arraybuffer",
+      responseType: "arraybuffer"
     });
   }
 
@@ -1457,10 +1459,10 @@ export class SnapshotClient {
     options?: ConsulBaseOptions
   ): Promise<boolean> {
     try {
-      const url = `/snapshot`;
+      const url = "/snapshot";
       await this._client.put(url, snapshot, {
         params: options,
-        headers: { "Content-Type": "application/octet-stream" },
+        headers: { "Content-Type": "application/octet-stream" }
       });
       return true;
     } catch (error: unknown) {
@@ -1538,7 +1540,7 @@ export class ConsulClient {
     this._baseUrl = `${protocol}://${host}:${port}/v1`;
 
     const headers: Record<string, string> = {
-      ...(options.headers || {}),
+      ...(options.headers || {})
     };
 
     if (options.token) {

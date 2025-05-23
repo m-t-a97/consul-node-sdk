@@ -4,7 +4,7 @@ async function main() {
   try {
     const consul = new ConsulClient({
       host: "localhost",
-      port: 8500,
+      port: 8500
     });
 
     const leader = await consul.status.leader();
