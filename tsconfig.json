@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ESNext",
+    "types": ["node", "vitest/globals"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "importHelpers": true,
@@ -8,19 +11,12 @@
     "isolatedDeclarations": true,
     "declaration": true,
     "strict": true,
-    "types": ["node"],
-    "target": "ESNext",
     "sourceMap": true,
-    "moduleResolution": "node",
     "lib": ["ESNext"],
     "strictNullChecks": false,
     "noImplicitAny": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "outDir": "./dist",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "outDir": "./dist"
   }
 }
