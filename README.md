@@ -26,6 +26,8 @@ This is a [Consul](https://developer.hashicorp.com/consul) SDK for Node.js. The 
 - `txn`: Consul transaction API
 - `snapshot`: Consul snapshot API
 
+Check out the official docs here: https://developer.hashicorp.com/consul/api-docs
+
 ---
 
 ### Usage
