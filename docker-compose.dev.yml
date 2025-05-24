@@ -1,0 +1,47 @@
+services:
+  consul:
+    image: hashicorp/consul:1.21
+    hostname: consul # The hostname will be resolved by other containers in the Docker network
+    ports:
+      - "8500:8500" # HTTP API and UI
+      - "8600:8600/tcp" # DNS interface (TCP)
+      - "8600:8600/udp" # DNS interface (UDP)
+      - "8301:8301" # Serf LAN (for cluster communication)
+      # You can add other ports like 8302 (WAN) and 8300 (RPC) if needed,
+      # but they are often not necessary for single-node dev setups.
+    # volumes:
+    # Optional: Mount a data directory to persist Consul's state across container restarts
+    # - ./docker-volumes/consul_data:/consul/data
+    environment:
+      CONSUL_LOCAL_CONFIG: |
+        {
+          "datacenter": "dc1",
+          "data_dir": "/consul/data",
+          "log_level": "info",
+          "server": true,
+          "bootstrap_expect": 1,
+          "ui": true,
+          "client_addr": "0.0.0.0",
+          "advertise_addr": "{{ GetInterfaceIP \"eth0\" }}",
+          "bind_addr": "0.0.0.0",
+          "node_name": "consul-server-1",
+          "ports": {
+            "http": 8500,
+            "dns": 8600,
+            "serf_lan": 8301,
+            "serf_wan": 8302,
+            "grpc": 8502
+          },
+          "enable_script_checks": true,
+          "enable_debug": false,
+          "telemetry": {
+            "prometheus_retention_time": "30s"
+          }
+        }
+    command: "agent -config-dir=/consul/config" # Tell Consul to load configs from this directory
+    healthcheck:
+      test: ["CMD", "consul", "members"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s # Give Consul time to start up before checking
